@@ -9,7 +9,6 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
-use App\Filament\Resources\UserResource;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -19,34 +18,26 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AdminPanelProvider extends PanelProvider
+class AdministradorPanelProvider extends PanelProvider
 {
-
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('admin')
-            ->path('admin')
-            ->login()
+            ->id('administrador')
+            ->path('administrador')
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->resources([
-                \App\Filament\Resources\UserResource::class,
-            ])
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Administrador/Resources'), for: 'App\\Filament\\Administrador\\Resources')
+            ->discoverPages(in: app_path('Filament/Administrador/Pages'), for: 'App\\Filament\\Administrador\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Administrador/Widgets'), for: 'App\\Filament\\Administrador\\Widgets')
             ->widgets([
-                \App\Filament\Widgets\EstadisticasDashboard::class,
-                \App\Filament\Widgets\CitasDelDiaTable::class,
-
+                Widgets\AccountWidget::class,
+                Widgets\FilamentInfoWidget::class,
             ])
-
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -60,7 +51,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-
             ]);
     }
 }

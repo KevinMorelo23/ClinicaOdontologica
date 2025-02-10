@@ -28,6 +28,15 @@ class CitasDelDiaTable extends BaseWidget
                     ->label('Cliente'),
                 Tables\Columns\TextColumn::make('doctor.nombre')
                     ->label('Doctor'),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn($state) => match ($state) {
+                        'pendiente' => 'warning',
+                        'atendido' => 'success',
+                        'cancelado' => 'danger',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('observaciones')
                     ->label('Observaciones')
                     ->wrap()

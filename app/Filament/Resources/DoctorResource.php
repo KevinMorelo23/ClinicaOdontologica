@@ -9,6 +9,7 @@ use App\Models\Doctor;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Model;
 
 class DoctorResource extends Resource
 {
@@ -32,6 +33,30 @@ class DoctorResource extends Resource
                     ->email()
                     ->required(),
             ]);
+    }
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista']);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista']);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista']);
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()->hasRole(['admin']);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->hasRole(['admin']);
     }
 
     public static function table(Tables\Table $table): Tables\Table

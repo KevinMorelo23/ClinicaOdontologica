@@ -12,6 +12,7 @@ class Cita extends Model
         'cliente_id',
         'fecha',
         'hora',
+        'status',
         'observaciones'
     ];
 

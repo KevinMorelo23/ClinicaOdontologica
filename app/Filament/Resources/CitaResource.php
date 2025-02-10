@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class CitaResource extends Resource
 {
@@ -31,10 +32,45 @@ class CitaResource extends Resource
                     ->required(),
                 Forms\Components\TimePicker::make('hora')
                     ->required(),
+                Forms\Components\Select::make('status')
+                    ->options(fn() => [
+                        'pendiente' => 'Pendiente',
+                        'atendido' => 'Atendido',
+                        'cancelado' => 'Cancelado',
+                    ])
+                    ->default('pendiente')
+                    ->required(),
+
                 Forms\Components\Textarea::make('observaciones')
                     ->nullable(),
             ]);
     }
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista', 'doctor']);
+    }
+
+    public static function canView(?Model $record = null): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista', 'doctor']);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista']);
+    }
+
+    public static function canEdit(?Model $record = null): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista', 'doctor']);
+    }
+
+    public static function canDelete(?Model $record = null): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista']);
+    }
+
+
 
     public static function table(Tables\Table $table): Tables\Table
     {
@@ -49,10 +85,22 @@ class CitaResource extends Resource
                 Tables\Columns\TextColumn::make('fecha')
                     ->date(),
                 Tables\Columns\TextColumn::make('hora'),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn($state) => match ($state) {
+                        'pendiente' => 'warning',
+                        'atendido' => 'success',
+                        'cancelado' => 'danger',
+                        default => 'gray',
+                    }),
+
                 Tables\Columns\TextColumn::make('observaciones')
                     ->wrap(),
             ])
-            ->filters([]);
+            ->filters([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ]);
     }
     public static function getPages(): array
     {

@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -30,6 +31,36 @@ class ClienteResource extends Resource
                 Forms\Components\TextInput::make('telefono')->required(),
             ]);
     }
+
+
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista', 'doctor']);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista', 'doctor']);
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista']);
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()->hasRole(['admin', 'recepcionista']);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->hasRole(['admin']);
+    }
+
+
+
 
     public static function table(Table $table): Table
     {

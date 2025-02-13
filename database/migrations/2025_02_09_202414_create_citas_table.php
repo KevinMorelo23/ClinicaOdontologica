@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cliente_id')->constrained()->onDelete('cascade');
             $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
-            $table->dateTime('fecha');
-            $table->dateTime('hora');
+            $table->date('fecha');
+            $table->time('hora');
             $table->string('status')->default('pendiente');
             $table->text('observaciones')->nullable();
             $table->timestamps();

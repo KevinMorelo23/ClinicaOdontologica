@@ -7,6 +7,7 @@ use App\Models\Cita;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -29,9 +30,14 @@ class CitaResource extends Resource
                     ->relationship('doctor', 'nombre')
                     ->required(),
                 Forms\Components\DatePicker::make('fecha')
-                    ->required(),
+                    ->required()
+                    ->displayFormat('d/m/Y')
+                    ->native(false),
                 Forms\Components\TimePicker::make('hora')
-                    ->required(),
+                    ->required()
+
+                    ->seconds(false),
+
                 Forms\Components\Select::make('status')
                     ->options(fn() => [
                         'pendiente' => 'Pendiente',
@@ -85,6 +91,7 @@ class CitaResource extends Resource
                 Tables\Columns\TextColumn::make('fecha')
                     ->date(),
                 Tables\Columns\TextColumn::make('hora'),
+
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn($state) => match ($state) {
